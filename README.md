@@ -1,164 +1,241 @@
 # Customer Churn Analysis
 
-An end-to-end telecom customer churn analytics project built using **MySQL, Python, Power BI, and Machine Learning**. The project explores historical churn patterns and uses a Random Forest classifier to identify newly joined customers who may be at risk of churning.
+An end-to-end data analytics project focused on understanding customer churn, identifying key retention patterns, and predicting customers who are likely to leave.
 
-## Project Overview
-
-This project combines data loading, SQL-based ETL, data quality checks, machine learning, and interactive Power BI dashboards to analyze customer churn and identify potential churn risks.
-
-- Load raw telecom customer data into MySQL.
-- Perform data quality checks and SQL-based data transformation.
-- Create views for historical customers and newly joined customers.
-- Train a Random Forest model using customers whose status is Stayed or Churned.
-- Generate churn predictions for newly joined customers.
-- Visualize churn patterns and predicted customer risk in Power BI.
+The project combines **MySQL, Python, Machine Learning, and Power BI** to transform raw customer data into actionable business insights through data preparation, exploratory analysis, interactive dashboards, and churn prediction.
 
 ## Dashboard Preview
 
-### 1. Churn Analysis — Summary
+### 1. Customer Churn Analysis
 
 ![Customer Churn Summary Dashboard](assets/summary_dashboard.png)
 
-The Summary dashboard provides an overview of customer churn through key metrics and visualizations, including customer demographics, age groups, tenure, contract types, internet services, churn categories, and service usage. Interactive filters allow users to explore the data across different customer segments.
+The summary dashboard explores customer distribution, churn rate, service usage, contract types, payment methods, and customer segments associated with churn.
 
-### 2. Churn Analysis — Prediction
+### 2. Customer Churn Prediction
 
 ![Customer Churn Prediction Dashboard](assets/prediction_dashboard.png)
 
-The Prediction dashboard highlights customers identified as potential churn risks. It includes customer profile breakdowns, distributions across different customer attributes, and a detailed table of predicted churners with their Customer IDs.
+The prediction dashboard presents customer-level churn predictions generated using a Random Forest classification model, helping identify customers who may require retention-focused attention.
 
-The screenshots above are available in the `assets/` folder. The interactive Power BI report is available in `powerbi/`.
+## Project Overview
 
-## Tools and Technologies
+Customer churn is a key business metric for subscription-based companies. Understanding why customers leave can help businesses identify at-risk segments and improve customer retention strategies.
 
-| Category | Tools |
+This project analyzes customer data to answer questions such as:
+
+- What proportion of customers have churned?
+- Which contract types and services are associated with higher churn?
+- How do customer tenure and payment methods relate to churn?
+- Which customer segments may require greater retention attention?
+- Can a machine learning model identify customers who may be likely to churn?
+
+## Key Findings
+
+- **6,418 customers** analyzed in the dataset.
+- **Approximately 27% churn rate** observed in the analyzed customer data.
+- Month-to-month customers show a substantially higher churn rate than customers on longer-term contracts.
+- Fiber Optic customers represent a segment worth examining for churn-related patterns.
+- A Random Forest classification model generates customer-level churn predictions for further analysis in Power BI.
+
+*These findings describe patterns in the available dataset and should not be interpreted as proof of causation.*
+
+## Tech Stack
+
+| Tool | Purpose |
 |---|---|
-| Database | MySQL 8.0 |
-| Programming | Python, SQL, DAX |
-| Data Analysis | pandas, NumPy |
-| Machine Learning | scikit-learn, Random Forest Classifier |
-| Visualization | Power BI Desktop, Matplotlib, Seaborn |
-| Database Connectivity | mysql-connector-python |
-| Model Persistence | joblib |
+| MySQL | Data exploration, querying, transformation, and analysis |
+| Python | Data cleaning, exploratory analysis, feature preparation, and prediction |
+| Pandas & NumPy | Data manipulation and preprocessing |
+| Matplotlib & Seaborn | Exploratory data visualization |
+| Scikit-learn | Machine learning and model evaluation |
+| Power BI | Interactive dashboards and business insights |
+| Jupyter Notebook | Analysis workflow and model development |
+| Git & GitHub | Version control and project documentation |
 
-## Dataset
+## Project Workflow
 
-- **Records:** 6,418 customers
-- **Features:** 32 columns covering customer demographics, services, contract and payment details, charges, and churn information
-- **Source:** Telecom Customer Churn Dataset
-- **File:** `data/Customer_Churn_Data.csv`
+1. **Data preparation:** Inspect and prepare the customer dataset for analysis.
+2. **SQL analysis:** Query customer data, create analytical views, and investigate churn patterns.
+3. **Exploratory data analysis:** Use Python to examine customer characteristics and relationships with churn.
+4. **Feature preparation:** Encode categorical variables and prepare the data for machine learning.
+5. **Churn prediction:** Train a Random Forest classifier and generate customer-level predictions.
+6. **Dashboard development:** Present summary insights and prediction results in Power BI.
+7. **Business interpretation:** Identify customer segments that may benefit from further retention analysis.
 
-## Project Structure
+## Repository Structure
 
 ```text
 customer-churn-analysis/
+│
 ├── assets/
 │   ├── summary_dashboard.png
 │   └── prediction_dashboard.png
+│
 ├── data/
-│   └── Customer_Churn_Data.csv
+│   ├── Customer_Churn_Data.csv
+│   └── Predictions.csv
+│
 ├── notebooks/
-│   ├── churn_data_import.ipynb
-│   └── churn_ml_model.ipynb
+│   └── Jupyter notebooks for analysis and prediction
+│
 ├── powerbi/
-│   └── Customer_Churn_Analysis.pbix
+│   └── Power BI dashboard files
+│
 ├── sql/
-│   └── churn_etl_queries.sql
+│   └── SQL scripts for data analysis
+│
 └── README.md
 ```
 
-## Data Pipeline
+*The structure above describes the main project components. Keep the actual notebook, SQL script, and Power BI filenames consistent with the files in the repository.*
 
-```text
-Raw Customer Data (CSV)
-          ↓
-Python Data Import
-          ↓
-MySQL Staging Table (stg_churn)
-          ↓
-SQL Data Cleaning and ETL
-          ↓
-Production Table (prod_churn)
-          ↓
-SQL Views (vw_ChurnData, vw_JoinData)
-          ↓
-Random Forest Model
-          ↓
-Predicted Churners (CSV)
-          ↓
-Power BI Dashboard
-```
+## Dataset
 
-## SQL ETL Pipeline
+The project uses customer-level data containing demographic details, account information, subscribed services, billing information, and churn status.
 
-The SQL script `sql/churn_etl_queries.sql` handles database setup, data quality checks, transformation, and view creation.
+- **`Customer_Churn_Data.csv`** — Customer dataset used for data analysis and model development.
+- **`Predictions.csv`** — Customer-level churn prediction results used to support the Power BI prediction dashboard.
 
-- **Staging table:** Raw customer data is loaded into `stg_churn` using Python.
-- **Data cleaning:** Selected missing service values are replaced with `No`, `Value_Deal` and `Internet_Type` values with `None`, and missing churn category or reason values with `Others`.
-- **Production table:** Cleaned data is stored in `prod_churn`.
-- **`vw_ChurnData`:** Provides historical customers whose status is Stayed or Churned for analysis and model training.
-- **`vw_JoinData`:** Provides newly joined customers as input for churn prediction.
+The dataset contains **6,418 records and 32 columns** in the version analyzed for this project.
 
-## Machine Learning Model
+## SQL Analysis
 
-**Algorithm:** Random Forest Classifier
+MySQL is used to explore and prepare the data for analysis.
 
-The notebook `notebooks/churn_ml_model.ipynb` performs the following steps:
+Key activities include:
 
-1. Retrieves historical customer data from `vw_ChurnData`.
-2. Preprocesses the data and removes selected identifiers and fields that could cause target leakage.
-3. Encodes categorical variables using `LabelEncoder`.
-4. Encodes the target variable as Stayed = 0 and Churned = 1.
-5. Splits the data into training and testing sets using an 80/20 split.
-6. Trains a Random Forest classifier and evaluates its performance using a confusion matrix and classification report.
-7. Generates predictions for newly joined customers from `vw_JoinData`.
-8. Exports predicted churners to a CSV file for use in Power BI.
+- Inspecting customer records and data quality.
+- Analyzing churn across contract types, services, and customer segments.
+- Creating analytical tables and views for downstream analysis.
+- Writing queries to identify patterns relevant to customer retention.
 
-The model's evaluation metrics can be obtained by running the notebook. Predictions indicate potential churn risk and should not be interpreted as guaranteed customer outcomes.
+The SQL workflow includes objects such as `stg_churn`, `prod_churn`, `vw_ChurnData`, and `vw_JoinData`, where applicable in the supplied SQL scripts.
 
-## Key Insights
+## Python & Machine Learning
 
-The current dashboard highlights the following patterns:
+Python is used for exploratory data analysis, preprocessing, and churn prediction.
 
-- **Overall churn rate:** 27%
-- **Month-to-Month contracts:** Approximately 77.16% churn rate
-- **Fiber Optic customers:** 41% churn rate
-- **Competitor:** The largest displayed churn category, with 761 customers
-- **Predicted churners:** 129 customers displayed on the Prediction dashboard
+### Analysis and preprocessing
 
-These figures reflect the dashboard screenshots included in this repository and may change when the data or report is refreshed.
+- Data inspection and preparation using Pandas and NumPy.
+- Exploratory analysis and visualization.
+- Encoding categorical variables using `LabelEncoder` where appropriate.
+- Preparing features and the target variable for model training.
 
-## How to Run
+### Model development
 
-### 1. MySQL Setup
+A **Random Forest Classifier** is used to classify customers according to their churn status.
 
-1. Open `sql/churn_etl_queries.sql` in MySQL Workbench.
-2. Run Section 1 to create the database and staging table.
-3. Configure your local MySQL connection details in the data-import notebook.
-4. Run `notebooks/churn_data_import.ipynb` to load `data/Customer_Churn_Data.csv` into the staging table.
-5. Run the remaining SQL sections to perform data quality checks, populate the production table, and create the views.
+The workflow includes:
 
-### 2. Install Python Dependencies
+- Splitting the data into training and testing sets.
+- Training the classification model.
+- Generating customer-level predictions.
+- Exporting prediction results to `Predictions.csv` for dashboard analysis.
+
+The project demonstrates a practical classification workflow. Model performance should be assessed using appropriate metrics such as precision, recall, F1-score, and confusion matrix results rather than predictions alone.
+
+## Power BI Dashboards
+
+### Customer Churn Summary
+
+The summary dashboard presents an overview of customer churn and enables exploration of churn patterns across relevant customer and service categories.
+
+### Customer Churn Prediction
+
+The prediction dashboard uses the exported prediction results to explore customers identified as potential churn risks.
+
+Together, the dashboards connect analytical findings with a business-focused view of customer retention.
+
+## How to Run the Project
+
+### Prerequisites
+
+Install or set up the following:
+
+- MySQL Server and MySQL Workbench
+- Python 3
+- Jupyter Notebook
+- Power BI Desktop
+
+### 1. Clone the repository
 
 ```bash
-pip install pandas numpy mysql-connector-python scikit-learn matplotlib seaborn joblib
+git clone https://github.com/shantanushrivastava/customer-churn-analysis.git
+cd customer-churn-analysis
 ```
 
-Run the notebooks using Jupyter Notebook or JupyterLab from the project directory.
+### 2. Set up Python
 
-### 3. Generate Predictions
+Create and activate a virtual environment if desired:
 
-Run `notebooks/churn_ml_model.ipynb` after the required SQL views have been created. Configure the local MySQL connection and prediction output path as needed. The generated predictions CSV can then be used as a data source for the Power BI Prediction dashboard.
+```bash
+python -m venv .venv
+```
 
-### 4. Open Power BI
+On Windows:
 
-Open `powerbi/Customer_Churn_Analysis.pbix` in Power BI Desktop. Update the MySQL connection credentials and data source settings for your local environment, then refresh the report if required.
+```bash
+.venv\Scripts\activate
+```
 
-**Note:** Use your own local database credentials. Never commit passwords, tokens, or other secrets to a public GitHub repository.
+Install the required libraries:
+
+```bash
+pip install pandas numpy matplotlib seaborn scikit-learn jupyter
+```
+
+### 3. Run the SQL analysis
+
+1. Start MySQL Server and open MySQL Workbench.
+2. Create or select the database required by the SQL scripts.
+3. Import or load the customer dataset as required by the project.
+4. Execute the SQL scripts in the `sql/` directory in the appropriate order.
+
+Update database connection settings locally before running any notebook that connects to MySQL.
+
+### 4. Run the Python notebooks
+
+Launch Jupyter Notebook:
+
+```bash
+jupyter notebook
+```
+
+Open the relevant notebooks in `notebooks/` and execute the cells in sequence. Ensure the dataset paths and database connection settings match your local environment.
+
+### 5. Open the Power BI dashboards
+
+Open the Power BI project file in `powerbi/` using Power BI Desktop. If prompted, update the data source paths to match your local setup.
+
+## Business Value
+
+This project demonstrates how SQL, Python, machine learning, and business intelligence can be combined to support customer retention analysis.
+
+Potential business applications include:
+
+- Identifying customer segments with elevated churn rates.
+- Understanding relationships between customer characteristics and churn.
+- Prioritizing customers for further investigation and retention campaigns.
+- Presenting analytical findings through interactive dashboards.
+- Supporting data-informed customer retention decisions.
+
+Model predictions should be validated before being used to make operational or customer-level decisions.
+
+## Skills Demonstrated
+
+`SQL` · `Python` · `MySQL` · `Pandas` · `NumPy` · `Exploratory Data Analysis` · `Data Cleaning` · `Feature Engineering` · `Scikit-learn` · `Random Forest` · `Power BI` · `Data Visualization` · `Business Intelligence`
 
 ## Author
 
-**Shantanu Shrivastava**  
-B.Tech CSE (AI/DS) | AKS University, Satna
+**Shantanu Shrivastava**
 
-[LinkedIn](https://www.linkedin.com/in/shantanushrivastava/) · [GitHub](https://github.com/shantanushrivastava)
+B.Tech — Computer Science Engineering (Artificial Intelligence & Data Science)
+
+- GitHub: [shantanushrivastava](https://github.com/shantanushrivastava)
+- Project Repository: [Customer Churn Analysis](https://github.com/shantanushrivastava/customer-churn-analysis)
+
+---
+
+*This project was developed for hands-on learning and portfolio demonstration in data analytics and machine learning.*

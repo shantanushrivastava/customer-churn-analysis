@@ -1,20 +1,12 @@
--- ============================================================
--- Customer Churn Analysis - SQL ETL Pipeline
--- Database : MySQL 8.0
--- Flow     : CSV -> stg_churn (Python import) -> prod_churn -> Views -> Power BI
---
 -- HOW TO RUN (in this order):
 --   1. Run Section 1 (creates database and empty staging table)
 --   2. Run notebooks/churn_data_import.ipynb ONCE (loads 6,418 rows into stg_churn)
 --   3. Run Sections 2, 3, 4 and 5
 -- This script is safe to re-run: it never drops stg_churn,
 -- so the imported data is not lost.
--- ============================================================
 
-
--- ============================================================
 -- SECTION 1: Database and staging table
--- ============================================================
+
 CREATE DATABASE IF NOT EXISTS db_Churn;
 USE db_Churn;
 
@@ -57,10 +49,8 @@ CREATE TABLE IF NOT EXISTS stg_churn (
 SELECT COUNT(*) FROM stg_churn;
 
 
--- ============================================================
 -- SECTION 2: Data Exploration - Distinct values
 -- Purpose: Understand distribution of key columns
--- ============================================================
 
 -- 1. Gender Distribution
 SELECT Gender, COUNT(Gender) as TotalCount,
@@ -93,10 +83,8 @@ SELECT DISTINCT Internet_Type
 FROM stg_churn;
 
 
--- ============================================================
 -- SECTION 3: Data Quality Checks
 -- Purpose: Identify duplicates, missing and invalid data
--- ============================================================
 
 -- 3a. Duplicate check: total_rows must equal unique_customers (6418 = 6418)
 SELECT COUNT(*) AS total_rows,
@@ -145,10 +133,9 @@ SELECT
 FROM stg_churn;
 
 
--- ============================================================
 -- SECTION 4: Data Cleaning - Create production table
 -- Purpose: Replace NULL values with defaults
--- ============================================================
+
 DROP VIEW IF EXISTS vw_ChurnData;
 DROP VIEW IF EXISTS vw_JoinData;
 DROP TABLE IF EXISTS prod_churn;
@@ -190,10 +177,8 @@ SELECT
 FROM stg_churn;
 
 
--- ============================================================
 -- SECTION 5: Views for Power BI and the ML model
 -- Purpose: Separate churned/stayed customers and new joiners
--- ============================================================
 
 -- View 1: Churned and Stayed customers (training data)
 CREATE VIEW vw_ChurnData AS

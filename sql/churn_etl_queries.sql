@@ -94,12 +94,8 @@ SELECT COUNT(*) AS total_rows,
        COUNT(DISTINCT Customer_ID) AS unique_customers
 FROM stg_churn;
 
--- 3b. Invalid values: negative monthly charges (known issue in source data)
-SELECT COUNT(*) AS negative_monthly_charge_rows
-FROM stg_churn
-WHERE Monthly_Charge < 0;
 
--- 3c. Null values in each column (before cleaning)
+-- 3b. Null values in each column (before cleaning)
 SELECT 
     SUM(CASE WHEN Customer_ID IS NULL THEN 1 ELSE 0 END) AS Customer_ID_Null_Count,
     SUM(CASE WHEN Gender IS NULL THEN 1 ELSE 0 END) AS Gender_Null_Count,

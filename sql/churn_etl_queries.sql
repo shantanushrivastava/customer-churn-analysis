@@ -1,3 +1,5 @@
+-- Customer Churn Analysis - SQL ETL Pipeline
+-- Database : MySQL 8.0
 -- HOW TO RUN (in this order):
 --   1. Run Section 1 (creates database and empty staging table)
 --   2. Run notebooks/churn_data_import.ipynb ONCE (loads 6,418 rows into stg_churn)
@@ -5,8 +7,8 @@
 -- This script is safe to re-run: it never drops stg_churn,
 -- so the imported data is not lost.
 
--- SECTION 1: Database and staging table
 
+-- SECTION 1: Database and staging table
 CREATE DATABASE IF NOT EXISTS db_Churn;
 USE db_Churn;
 
@@ -51,29 +53,30 @@ SELECT COUNT(*) FROM stg_churn;
 
 -- SECTION 2: Data Exploration - Distinct values
 -- Purpose: Understand distribution of key columns
+-- (Percentage columns are multiplied by 100 and rounded to 2 decimals)
 
 -- 1. Gender Distribution
-SELECT Gender, COUNT(Gender) as TotalCount,
-COUNT(Gender) * 1.0 / (SELECT COUNT(*) FROM stg_churn) as Percentage
+SELECT Gender, COUNT(Gender) AS TotalCount,
+ROUND(COUNT(Gender) * 100.0 / (SELECT COUNT(*) FROM stg_churn), 2) AS Percentage
 FROM stg_churn
 GROUP BY Gender;
 
 -- 2. Contract Type Distribution
-SELECT Contract, COUNT(Contract) as TotalCount,
-COUNT(Contract) * 1.0 / (SELECT COUNT(*) FROM stg_churn) as Percentage
+SELECT Contract, COUNT(Contract) AS TotalCount,
+ROUND(COUNT(Contract) * 100.0 / (SELECT COUNT(*) FROM stg_churn), 2) AS Percentage
 FROM stg_churn
 GROUP BY Contract;
 
 -- 3. Customer Status & Revenue Breakdown
-SELECT Customer_Status, COUNT(Customer_Status) as TotalCount,
-SUM(Total_Revenue) as TotalRev,
-SUM(Total_Revenue) / (SELECT SUM(Total_Revenue) FROM stg_churn) * 100 as RevPercentage
+SELECT Customer_Status, COUNT(Customer_Status) AS TotalCount,
+ROUND(SUM(Total_Revenue), 2) AS TotalRev,
+ROUND(SUM(Total_Revenue) * 100.0 / (SELECT SUM(Total_Revenue) FROM stg_churn), 2) AS RevPercentage
 FROM stg_churn
 GROUP BY Customer_Status;
 
 -- 4. State-wise Customer Distribution
-SELECT State, COUNT(State) as TotalCount,
-COUNT(State) * 1.0 / (SELECT COUNT(*) FROM stg_churn) as Percentage
+SELECT State, COUNT(State) AS TotalCount,
+ROUND(COUNT(State) * 100.0 / (SELECT COUNT(*) FROM stg_churn), 2) AS Percentage
 FROM stg_churn
 GROUP BY State
 ORDER BY Percentage DESC;
@@ -135,7 +138,6 @@ FROM stg_churn;
 
 -- SECTION 4: Data Cleaning - Create production table
 -- Purpose: Replace NULL values with defaults
-
 DROP VIEW IF EXISTS vw_ChurnData;
 DROP VIEW IF EXISTS vw_JoinData;
 DROP TABLE IF EXISTS prod_churn;
